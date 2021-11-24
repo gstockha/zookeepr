@@ -7,10 +7,6 @@ app.use(express.urlencoded({ extended: true })); // parse incoming string or arr
 app.use(express.json()); // parse incoming JSON data
 const { animals } = require('./data/animals'); //destruct all the animal from the object
 
-app.listen(PORT, ()=>{
-    console.log(`API server now on port ${PORT}!`);
-});
-
 function filterByQuery(query, animalsArray) {
     let filteredResults = animalsArray;
     if (query.personalityTraits) {
@@ -97,4 +93,22 @@ app.post('/api/animals', (req, res) => {
       const animal = createNewAnimal(req.body, animals);
       res.json(animal);
     }
+});
+
+app.use(express.static('public'));
+
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+app.get('/zookeepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+app.listen(PORT, ()=>{
+  console.log(`API server now on port ${PORT}!`);
 });
